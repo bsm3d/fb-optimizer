@@ -1,0 +1,106 @@
+/*
+ * =================================================================
+ *  FB Optimizer - fb-optimizer.css  v1.1
+ *  Author  : Benoît (BSM) Saint-Moulin - bsm3d.com
+ *  License : MIT
+ * =================================================================
+ *
+ *  Injected at document_start → elements hidden before first paint.
+ *  Selectors use stable attributes only (aria-*, href, data-*).
+ *  Never obfuscated React class names (xABCDE) - those change weekly.
+ *
+ *  REVEAL GATING
+ *  -------------
+ *  Each toggleable rubric's rules are gated behind attributes on <html>:
+ *    :root:not([data-fbopt-off])            → master switch (all rules)
+ *    :root:not([data-fbopt-<rubric>-off])   → that rubric's switch
+ *  Attributes ABSENT by default → rules active → hidden with no flash.
+ *  content.js sets `data-fbopt-<rubric>-off` when the block is turned OFF,
+ *  which disables the matching rules and reveals the content.
+ *  The `[data-fbopt="…"]` markers are set/removed by JS and are not gated.
+ *
+ *  Sections:
+ *    1. Reels
+ *    2. Sponsored posts + Paid partnership
+ *    3. Stories
+ *    4. People You May Know
+ *    5. Marketplace (feed only)
+ *    6. Suggested for you   (JS marker only)
+ *    7. Creator & pro tools
+ *    8. Generic data-fbopt markers (JS-driven)
+ * =================================================================
+ */
+
+
+/* -- 1. REELS ------------------------------------------------------ */
+
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[aria-label="reel"][href*="/reel/"]                  { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-type="hscroll-child"]:has(a[aria-label="reel"]) { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[href^="/reel/"]                                     { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[href^="/reels/"]                                    { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) li:has(> a[href^="/reel/"])                           { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) li:has(> a[href^="/reels/"])                          { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-pagelet*="Reels"]                               { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-pagelet*="reels"]                               { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels"][role="region"]                   { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels and short videos"][role="region"]  { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [role="navigation"] a[href*="/reel"]                  { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [role="tablist"] [href*="reel"]                       { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-tab-key="reels"]                                { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels"][role="tab"]                      { display: none !important; }
+
+
+/* -- 2. SPONSORED POSTS + PAID PARTNERSHIP ------------------------- */
+
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) [data-pagelet*="Sponsored"]            { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) a[aria-label*="Sponsored"]             { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) a[aria-label*="Sponsorisé"]            { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) a[aria-label*="Patrocinado"]           { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) a[aria-label^="Paid partnership"]      { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-ads-off]) a[aria-label^="Partenariat"]           { display: none !important; }
+
+
+/* -- 3. STORIES ---------------------------------------------------- */
+
+:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [data-pagelet*="Stories"]             { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [data-pagelet*="stories"]             { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [aria-label="Stories"][role="region"] { display: none !important; }
+
+
+/* -- 4. PEOPLE YOU MAY KNOW ---------------------------------------- */
+
+:root:not([data-fbopt-off]):not([data-fbopt-pymk-off]) [data-pagelet*="PeopleYouMayKnow"]   { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-pymk-off]) [data-pagelet*="FriendSuggestions"]  { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-pymk-off]) [aria-label*="People You May Know"]  { display: none !important; }
+
+
+/* -- 5. MARKETPLACE IN FEED ---------------------------------------- */
+
+:root:not([data-fbopt-off]):not([data-fbopt-marketplace-off]) [data-pagelet*="Marketplace"]  { display: none !important; }
+
+
+/* -- 6. SUGGESTED FOR YOU (JS marker only) ------------------------- */
+/* handled entirely by content.js → [data-fbopt="suggested"] below    */
+
+
+/* -- 7. CREATOR & PRO TOOLS ---------------------------------------- */
+
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[href*="professional_dashboard"]            { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[href*="business.facebook.com"]             { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[href*="/adsmanager"]                       { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[href*="/ads/manager"]                      { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[href*="/ad_center"]                        { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) div[role="button"][aria-label="Create ad"]  { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) a[aria-label="Create ad"]                    { display: none !important; }
+:root:not([data-fbopt-off]):not([data-fbopt-creator-off]) div[role="button"][aria-label="Boost post"]  { display: none !important; }
+
+
+/* -- 8. GENERIC JS MARKERS (set/removed by content.js) ------------- */
+/* Not gated: content.js adds the marker to hide and removes it to reveal. */
+
+[data-fbopt="ad"]           { display: none !important; }
+[data-fbopt="pymk"]         { display: none !important; }
+[data-fbopt="marketplace"]  { display: none !important; }
+[data-fbopt="suggested"]    { display: none !important; }
+[data-fbopt="creator"]      { display: none !important; }
+[data-fbopt]                { display: none !important; }

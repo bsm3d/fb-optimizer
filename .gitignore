@@ -1,0 +1,15 @@
+# Build artifacts
+web-ext-artifacts/
+*.xpi
+*.zip
+
+# Original v1.0 recovery (not part of the source)
+source/
+fb-optimizer@bsm3d.com.xpi
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
