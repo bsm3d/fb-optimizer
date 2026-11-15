@@ -9,6 +9,12 @@ and trackers from Facebook, for a faster and cleaner feed.
 
 Author: Benoit (BSM) Saint-Moulin, https://www.bsm3d.com
 
+## Install
+
+Install from Firefox Add-ons (reviewed by Mozilla, signed, auto-updating):
+
+https://addons.mozilla.org/en-US/firefox/addon/fb-optimizer/
+
 ## Features
 
 Eight independent toggles (master switch + per-block), all on by default:
