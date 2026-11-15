@@ -73,6 +73,30 @@ function startsWithAny(str, prefixes) {
 }
 
 // -----------------------------------------------------------------
+// Page context - some rubrics only exist on the home feed
+// -----------------------------------------------------------------
+//
+// The Stories tray and the Reels carousels are home-feed furniture. On a
+// profile or Page the only story/reel things are legitimate features (the
+// "Add to story" button, a "Reels" profile tab), so container-level hiding
+// of those rubrics is restricted to the home feed. Everything narrow (a reel
+// link, a nav/tab entry) stays active everywhere - it only removes that link.
+
+function isHomeFeed() {
+  const p = location.pathname;
+  return p === "/" || p === "" || p === "/home.php";
+}
+
+// Reflect the home-feed state onto <html> so the static CSS can gate the
+// feed-only rules. Set synchronously at document_start → no flash on home,
+// and absent on profiles → their header can never be hidden by these rules.
+function updatePageContext() {
+  const de = document.documentElement;
+  if (de) de.toggleAttribute("data-fbopt-home", isHomeFeed());
+}
+updatePageContext();
+
+// -----------------------------------------------------------------
 // Localized text sets for header/button detection
 // -----------------------------------------------------------------
 
@@ -138,20 +162,27 @@ const CREATOR_TEXTS = new Set([
 // Stable CSS selectors (no obfuscated React classes)
 // -----------------------------------------------------------------
 
-const REEL_SELECTORS = [
+// Reel LINKS and nav/tab entries - safe to act on anywhere: they only ever
+// remove a link, a list item or a tab, never a surrounding header card.
+const REEL_LINK_SELECTORS = [
   'a[aria-label="reel"]',
-  '[data-type="hscroll-child"]:has(a[aria-label="reel"])',
   'a[href^="/reel/"]',
   'a[href^="/reels/"]',
-  '[data-pagelet*="Reels"]',
-  '[data-pagelet*="reels"]',
-  '[aria-label="Reels"][role="region"]',
-  '[aria-label="Reels and short videos"]',
   '[role="navigation"] a[href*="/reel"]',
   '[role="tablist"] [href*="reel"]',
   '[data-tab-key="reels"]',
   'li:has(> a[href^="/reel/"])',
   'li:has(> a[href^="/reels/"])'
+];
+
+// Reel TRAYS / carousels / pagelets - container-level hide, so restricted to
+// the home feed (see isHomeFeed). The lowercase [data-pagelet*="reels"] was
+// dropped: too broad, it could match an unrelated container off the feed.
+const REEL_TRAY_SELECTORS = [
+  '[data-type="hscroll-child"]:has(a[aria-label="reel"])',
+  '[data-pagelet*="Reels"]',
+  '[aria-label="Reels"][role="region"]',
+  '[aria-label="Reels and short videos"]'
 ];
 
 const STORY_SELECTORS = [
@@ -310,22 +341,27 @@ function showByMarker(marker) {
 
 function scanReels(root) {
   if (!blocks["bl-reels"]) return;
+  const home = isHomeFeed();
 
-  // Header text approach (carousel widget + sidebar button)
-  root.querySelectorAll('h2[dir="auto"], h3[dir="auto"]').forEach(h => {
-    if (!REEL_TEXTS.has(txt(h))) return;
-    const card = findContainerCard(h);
-    hideNode(card || h.parentElement || h, "reel");
-  });
+  // Carousel section title ("Reels") - home feed only, so a "Reels" heading
+  // elsewhere can never make findContainerCard climb into a page header.
+  if (home) {
+    root.querySelectorAll('h2[dir="auto"], h3[dir="auto"]').forEach(h => {
+      if (!REEL_TEXTS.has(txt(h))) return;
+      const card = findContainerCard(h);
+      hideNode(card || h.parentElement || h, "reel");
+    });
+  }
 
+  // Left-nav / tab "Reels" entry - safe anywhere (hides the button only).
   root.querySelectorAll('div > span[dir="auto"]').forEach(span => {
     if (txt(span) !== "Reels") return;
     const btn = findSidebarButton(span);
     if (btn) hideNode(btn, "reel");
   });
 
-  // Stable attribute selectors
-  REEL_SELECTORS.forEach(sel => {
+  // Reel links and nav/tab entries - safe anywhere.
+  REEL_LINK_SELECTORS.forEach(sel => {
     try {
       root.querySelectorAll(sel).forEach(el => {
         if (el.hasAttribute("data-fbopt")) return;
@@ -334,13 +370,29 @@ function scanReels(root) {
           const hs = el.closest('[data-type="hscroll-child"]');
           if (hs) { hideNode(hs, "reel"); return; }
         }
-        const card = findContainerCard(el);
-        hideNode(card || el, "reel");
+        // On the home feed a reel link marks a whole feed post, so climb to
+        // its card. Off the feed, only remove the link/li - never a header.
+        const box = home
+          ? (findContainerCard(el) || el.closest("li") || el)
+          : (el.closest("li") || el);
+        hideNode(box, "reel");
       });
     } catch (_) {
       // :has() silently fails on unsupported browsers (FF < 121)
     }
   });
+
+  // Reel trays / carousels / pagelets - container-level, home feed only.
+  if (home) {
+    REEL_TRAY_SELECTORS.forEach(sel => {
+      try {
+        root.querySelectorAll(sel).forEach(el => {
+          if (el.hasAttribute("data-fbopt")) return;
+          hideNode(el, "reel");
+        });
+      } catch (_) {}
+    });
+  }
 }
 
 function scanSponsored(root) {
@@ -370,6 +422,9 @@ function scanSponsored(root) {
 
 function scanStories(root) {
   if (!blocks["bl-stories"]) return;
+  // The Stories tray lives on the home feed only. Restricting the scan there
+  // keeps the standalone "Add to story" button (profile/Page header) untouched.
+  if (!isHomeFeed()) return;
   STORY_SELECTORS.forEach(sel => {
     try {
       root.querySelectorAll(sel).forEach(el => hideNode(el, "stories"));
@@ -463,6 +518,7 @@ function scanCreator(root) {
 
 // Run all scans on a given root element
 function runAllScans(root) {
+  updatePageContext();   // keep the home-feed gate current across SPA nav
   scanReels(root);
   scanSponsored(root);
   scanStories(root);

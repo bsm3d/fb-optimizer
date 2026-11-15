@@ -33,21 +33,27 @@
 
 
 /* -- 1. REELS ------------------------------------------------------ */
+/* Links, nav and tab entries: active anywhere - they only remove a link,
+   a list item or a tab, never a surrounding header card. */
 
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[aria-label="reel"][href*="/reel/"]                  { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-type="hscroll-child"]:has(a[aria-label="reel"]) { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[href^="/reel/"]                                     { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) a[href^="/reels/"]                                    { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) li:has(> a[href^="/reel/"])                           { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) li:has(> a[href^="/reels/"])                          { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-pagelet*="Reels"]                               { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-pagelet*="reels"]                               { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels"][role="region"]                   { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels and short videos"][role="region"]  { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [role="navigation"] a[href*="/reel"]                  { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [role="tablist"] [href*="reel"]                       { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-tab-key="reels"]                                { display: none !important; }
 :root:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels"][role="tab"]                      { display: none !important; }
+
+/* Trays / carousels / pagelets: container-level, so home feed only
+   (:root[data-fbopt-home], set by content.js). This way a "Reels" region
+   inside a profile/Page header can never be hidden. */
+
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-type="hscroll-child"]:has(a[aria-label="reel"]) { display: none !important; }
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-reels-off]) [data-pagelet*="Reels"]                               { display: none !important; }
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels"][role="region"]                   { display: none !important; }
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-reels-off]) [aria-label="Reels and short videos"][role="region"]  { display: none !important; }
 
 
 /* -- 2. SPONSORED POSTS + PAID PARTNERSHIP ------------------------- */
@@ -61,10 +67,12 @@
 
 
 /* -- 3. STORIES ---------------------------------------------------- */
+/* Home feed only (:root[data-fbopt-home]): the Stories tray lives there.
+   The standalone "Add to story" button on a profile/Page header is left
+   untouched. Lowercase [data-pagelet*="stories"] dropped (too broad). */
 
-:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [data-pagelet*="Stories"]             { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [data-pagelet*="stories"]             { display: none !important; }
-:root:not([data-fbopt-off]):not([data-fbopt-stories-off]) [aria-label="Stories"][role="region"] { display: none !important; }
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-stories-off]) [data-pagelet*="Stories"]             { display: none !important; }
+:root[data-fbopt-home]:not([data-fbopt-off]):not([data-fbopt-stories-off]) [aria-label="Stories"][role="region"] { display: none !important; }
 
 
 /* -- 4. PEOPLE YOU MAY KNOW ---------------------------------------- */

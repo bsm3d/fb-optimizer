@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1
+
+Fix: the Stories and Reels blocks could remove a profile / Page header.
+
+- Stories and Reels tray hiding is now restricted to the home feed, where
+  those trays actually live. On a profile or Page the standalone "Add to
+  story" button and the header are left untouched.
+- Narrow hiding (reel links, nav and tab entries) stays active everywhere; it
+  only removes a link or a tab, never a surrounding header card.
+- Dropped the over-broad lowercase `[data-pagelet*="reels"]` and
+  `[data-pagelet*="stories"]` selectors.
+- Added a `data-fbopt-home` gate on `<html>`, set at document_start, so the
+  feed-only CSS still hides with no flash on the home feed.
+
 ## 1.1.0
 
 Manifest V3 migration (Firefox) and stronger hiding.
